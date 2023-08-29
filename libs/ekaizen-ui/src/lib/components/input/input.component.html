@@ -1,0 +1,234 @@
+<div [ngSwitch]="type" *ngIf="!skeleton; else skeletonView">
+  <!-- INPUT TEXT -->
+  <div *ngSwitchCase="'text'">
+    <div class="flex justify-between">
+      <div [ngSwitch]="required">
+        <ek-text *ngSwitchCase="false" type="quote">{{ label }}</ek-text>
+        <ek-text *ngSwitchCase="true" type="quote"
+          >{{ label
+          }}<span *ngIf="!disabled && !readonly" class="text-danger-600"
+            >*</span
+          ></ek-text
+        >
+      </div>
+      <div>
+        <ek-text *ngIf="maxlength" type="quote">{{
+          value ? (value.length + '/' + maxlength) : ''
+        }}</ek-text>
+      </div>
+    </div>
+    <div [ngClass]="[setupStyle]" class="relative w-full">
+      <div class="icon flex items-center">
+        <ng-content select="[pre]"> </ng-content>
+      </div>
+
+      <input
+        #input="ngModel"
+        [(ngModel)]="value"
+        [value]="value"
+        [required]="required"
+        [disabled]="disabled"
+        [minlength]="minlength"
+        [maxlength]="maxlength"
+        [name]="name"
+        type="text"
+        (focus)="focus()"
+        (change)="onChangeModel()"
+        (input)="onChangeModel()"
+        (blur)="onTouchModel()"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full outline-none border-none"
+        [placeholder]="getPlaceholderStyle"
+        [ngClass]="{ 'bg-gray-100': disabled || readonly }"
+      />
+      <div *ngIf="!disabled && !readonly && !focused">
+        <div class="text-danger-600" *ngIf="getErrors.length && input.dirty">
+          <fa-icon *ngIf="errorIcon" [icon]="errorIcon"></fa-icon>
+        </div>
+        <div class="text-success-600" *ngIf="!getErrors.length && input.dirty">
+          <fa-icon *ngIf="successIcon" [icon]="successIcon"></fa-icon>
+        </div>
+      </div>
+    </div>
+    <ek-text type="quote" color="danger"
+      ><div>
+        {{ getErrors[0] && input.dirty ? getErrors[0] : '' }}
+      </div>
+    </ek-text>
+  </div>
+
+  <!-- INPUT NUMBER -->
+  <div *ngSwitchCase="'number'">
+    <div class="flex justify-between">
+      <div [ngSwitch]="required">
+        <ek-text *ngSwitchCase="false" type="quote">{{ label }}</ek-text>
+        <ek-text *ngSwitchCase="true" type="quote"
+        >{{ label
+          }}<span *ngIf="!disabled && !readonly" class="text-danger-600"
+          >*</span
+          ></ek-text
+        >
+      </div>
+      <div>
+        <ek-text *ngIf="max" type="quote">{{
+          value ? (value + '/' + max) : ''
+          }}</ek-text>
+      </div>
+    </div>
+    <div [ngClass]="[setupStyle]" class="relative w-full">
+
+      <div *ngIf="!disabled && !readonly && !skeleton">
+        <fa-icon  (mousedown)="decrease()" [ngClass]="['mr-[8px]', getArrowInputDisabledStyle('left')]"  [icon]="arrowLeft"></fa-icon>
+      </div>
+
+      <input
+        #input="ngModel"
+        [ngModel]="value === '' ? '0' : value"
+        [value]="value === '' ? '0' : value"
+        (ngModelChange)="value = $event"
+        [required]="required"
+        [disabled]="disabled"
+        [max]="max"
+        [min]="min"
+        [name]="name"
+        type="number"
+        (focus)="focus()"
+        (change)="onChangeModel()"
+        (input)="onChangeModel($event, input)"
+        (blur)="onTouchModel()"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full outline-none border-none"
+        [placeholder]="getPlaceholderStyle"
+        [ngClass]="{ 'bg-gray-100': disabled || readonly }"
+      />
+
+      <div  *ngIf="!disabled && !readonly && !skeleton">
+        <fa-icon (mousedown)="increase()"  [ngClass]="['ml-[8px]', getArrowInputDisabledStyle('right')]" [icon]="arrowRight"></fa-icon>
+      </div>
+    </div>
+    <ek-text type="quote" color="danger"
+    ><div>
+      {{ getErrors[0] && input.dirty ? getErrors[0] : '' }}
+    </div>
+    </ek-text>
+  </div>
+
+  <!-- INPUT PASSWORD -->
+  <div *ngSwitchCase="'password'">
+    <div class="flex justify-between">
+      <div [ngSwitch]="required">
+        <ek-text *ngSwitchCase="false" type="quote">{{ label }}</ek-text>
+        <ek-text *ngSwitchCase="true" type="quote"
+          >{{ label
+          }}<span *ngIf="!disabled && !readonly" class="text-danger-600"
+            >*</span
+          ></ek-text
+        >
+      </div>
+    </div>
+    <div [ngClass]="[setupStyle]" class="relative w-full">
+      <div class="icon flex items-center">
+        <ng-content select="[pre]"> </ng-content>
+      </div>
+      <input
+        #input="ngModel"
+        [(ngModel)]="value"
+        [value]="value"
+        [required]="required"
+        [disabled]="disabled"
+        [minlength]="minlength"
+        [maxlength]="maxlength"
+        [name]="name"
+        [type]="togglePassword"
+        (focus)="focus()"
+        (change)="onChangeModel()"
+        (input)="onChangeModel()"
+        (blur)="onTouchModel()"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full outline-none border-none"
+        [placeholder]="getPlaceholderStyle"
+        [ngClass]="{ 'bg-gray-100': disabled || readonly }"
+      />
+
+      <div [ngSwitch]="showPassword">
+        <fa-icon
+          (click)="showPassword = false"
+          class="cursor-pointer"
+          *ngSwitchCase="true"
+          [icon]="passwordOn"
+        ></fa-icon>
+        <fa-icon
+          (click)="showPassword = true"
+          class="cursor-pointer"
+          *ngSwitchCase="false"
+          [icon]="passwordOff"
+        ></fa-icon>
+      </div>
+    </div>
+    <ek-text type="quote" color="danger"
+      ><div>
+        {{ getErrors[0] && input.dirty ? getErrors[0] : '' }}
+      </div>
+    </ek-text>
+  </div>
+
+  <!-- INPUT EMAIL -->
+  <div *ngSwitchCase="'email'">
+    <div class="flex justify-between">
+      <div [ngSwitch]="required">
+        <ek-text *ngSwitchCase="false" type="quote">{{ label }}</ek-text>
+        <ek-text *ngSwitchCase="true" type="quote"
+        >{{ label
+          }}<span *ngIf="!disabled && !readonly" class="text-danger-600"
+          >*</span
+          ></ek-text
+        >
+      </div>
+    </div>
+    <div [ngClass]="[setupStyle]" class="relative w-full">
+      <div class="icon flex items-center">
+        <ng-content select="[pre]"> </ng-content>
+      </div>
+      <input
+        #input="ngModel"
+        [(ngModel)]="value"
+        [value]="value"
+        [required]="required"
+        [disabled]="disabled"
+        [minlength]="minlength"
+        [maxlength]="maxlength"
+        [name]="name"
+        [email]="email"
+        type="email"
+        (focus)="focus()"
+        (change)="onChangeModel()"
+        (input)="onChangeModel()"
+        (blur)="onTouchModel()"
+        [ngModelOptions]="{ standalone: true }"
+        class="w-full outline-none border-none"
+        [placeholder]="getPlaceholderStyle"
+        [ngClass]="{ 'bg-gray-100': disabled || readonly }"
+      />
+      <div *ngIf="!disabled && !readonly && !focused">
+        <div class="text-danger-600" *ngIf="getErrors.length && input.dirty">
+          <fa-icon *ngIf="errorIcon" [icon]="errorIcon"></fa-icon>
+        </div>
+        <div class="text-success-600" *ngIf="!getErrors.length && input.dirty">
+          <fa-icon *ngIf="successIcon" [icon]="successIcon"></fa-icon>
+        </div>
+      </div>
+    </div>
+    <ek-text type="quote" color="danger"
+    ><div>
+      {{ getErrors[0] && input.dirty ? getErrors[0] : '' }}
+    </div>
+    </ek-text>
+  </div>
+</div>
+
+<ng-template #skeletonView>
+  <div class="flex flex-col">
+    <ek-text type="quote" skeletonWidth="84px" [skeleton]="skeleton"></ek-text>
+    <div [ngClass]="[setupSkeleton]"></div>
+  </div>
+</ng-template>

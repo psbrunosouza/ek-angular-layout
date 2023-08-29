@@ -1,0 +1,9 @@
+<span *ngIf="!skeleton; else skeletonView" [ngClass]="getTextTypeStyle"
+><ng-content></ng-content
+></span>
+
+<ng-template #skeletonView>
+  <div class="h-[24px] w-full flex items-center">
+    <div [style.width]="skeletonWidth" class="skeleton h-[16px]"></div>
+  </div>
+</ng-template>
